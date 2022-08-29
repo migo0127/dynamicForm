@@ -1,0 +1,447 @@
+
+<div  class="wrap container shadow-sm p-4 mt-4">
+
+  <button *ngIf="isPrivewPage"
+          class="btn btn-link mb-2"
+          (click)="goBack()">
+      {{ '\< Back' }}
+  </button>
+
+  <!-- 動態表單拖拉頁 -->
+  <div *ngIf="!isPrivewPage">
+
+    <h4 class="text-center font-weight-bold">
+      {{ 'create dynamic form' }}
+    </h4>
+
+    <!-- 表單拖拉區 -->
+    <div  cdkDropListGroup
+          class="mb-3 dragWrap">
+      <!-- 報名表區 -->
+      <div>
+        <h5>{{ 'form' }}</h5>
+        <div
+              cdkDropList
+              [cdkDropListData]="dropFormList"
+              class="border p-2 drapList overflow-scroll"
+              (cdkDropListDropped)="drop($event)">
+          <div  cdkDrag
+                *ngFor="let item of dropFormList; let i=index"
+                >
+              <div *ngIf="item"
+                  class="mb-3 p-2 bg-light rounded">
+
+                  <!-- input 格式 -->
+                  <ng-container  *ngIf="item.tag === 'input'"
+                                  >
+                    <div class="mx-2 d-flex justify-content-between align-items-center">
+                      <div>
+                        <span *ngIf="item?.require"
+                              [ngClass]="{'text-danger': item.require }">
+                          {{ '*' }}
+                        </span>
+                        <label>
+                          {{ item.name }}
+                        </label>
+                      </div>
+                      <i  *ngIf=" item.key !== 'firstName' &&
+                                  item.key !== 'lastName' &&
+                                  item.key !== 'name' &&
+                                  item.key !== 'email' &&
+                                  item.key !== 'phone' &&
+                                  item.key !== 'id'"
+                          class="fas fa-ellipsis-v mr-2 pointer"
+                          (click)="inputConfig(item, configModal)">
+                      </i>
+                    </div>
+                    <div class="mx-2 d-flex justify-content-between align-items-center">
+                      <input  [type]="item.type"
+                              [id]="item.key"
+                              [name]="item.key"
+                              [value]="item.value"
+                              class="form-control mr-2"
+                              disabled
+                              >
+                      <button type="button"
+                              class="btn btn-outline-danger rounded-circle deleteBtn"
+                              (click)="removeItem(i)">
+                              {{ "—" }}
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <!-- radio、checkbox 格式 -->
+                  <ng-container  *ngIf="item.tag === 'radioOrCheckbox'">
+                    <div class="mx-2 d-flex justify-content-between align-items-center">
+                      <div>
+                        <span *ngIf="item.require"
+                              [ngClass]="{'text-danger': item.require }">
+                          {{ '*' }}
+                        </span>
+                        <label>
+                          {{ item.name }}
+                        </label>
+                      </div>
+                      <i  class="fas fa-ellipsis-v mr-2 pointer"
+                          (click)="inputConfig(item, configModal)">
+                      </i>
+                    </div>
+                    <div class="mx-2 d-flex justify-content-between align-items-center">
+                      <div>
+                        <div  *ngFor="let data of item?.options?.optionList">
+                          <input  class="mr-2"
+                                  [type]="item.type"
+                                  [id]="item.key"
+                                  [name]="item.key"
+                                >
+                          <label>
+                            {{ data }}
+                          </label>
+                        </div>
+                      </div>
+                      <button type="button"
+                              class="btn btn-outline-danger rounded-circle deleteBtn"
+                              (click)="removeItem(i)">
+                              {{ "—" }}
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <!-- textarea 格式 -->
+                  <ng-container  *ngIf="item.tag === 'textarea'">
+                    <div class="mx-2 d-flex justify-content-between align-items-center">
+                      <div>
+                        <span *ngIf="item.require"
+                              [ngClass]="{'text-danger': item.require }">
+                          {{ '*' }}
+                        </span>
+                        <label>
+                          {{ item.name }}
+                        </label>
+                      </div>
+                      <i  class="fas fa-ellipsis-v mr-2 pointer"
+                          (click)="inputConfig(item, configModal)">
+                      </i>
+                    </div>
+                    <div class="mx-2 d-flex justify-content-between align-items-center w-80">
+                      <div style="width: 95%">
+                        <textarea class="form-control mr-2"
+                                  [id]="item.key"
+                                  [name]="item.key"
+                                  [rows]="item.options?.rows"
+                                  [maxLength]="item.options?.maxLength"
+                                  [value]="item.value"
+                                  disabled
+                                  >
+                        </textarea>
+                        <p  *ngIf="item?.options?.maxLength"
+                            class="text-right text-secondary">
+                            {{ (item.value || '').toString().length + "/" + item.options?.maxLength }}
+                        </p>
+                      </div>
+                      <button type="button"
+                              class="btn btn-outline-danger rounded-circle deleteBtn"
+                              (click)="removeItem(i)">
+                              {{ "—" }}
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <!-- select 格式 -->
+                  <ng-container  *ngIf="item.tag === 'select'">
+                    <div class="mx-2 d-flex justify-content-between align-items-center">
+                      <div>
+                        <span *ngIf="item.require"
+                              [ngClass]="{'text-danger': item.require }">
+                          {{ '*' }}
+                        </span>
+                        <label>
+                          {{ item.name }}
+                        </label>
+                      </div>
+                      <i  class="fas fa-ellipsis-v mr-2 pointer"
+                          (click)="inputConfig(item, configModal)">
+                      </i>
+                    </div>
+                    <div class="mx-2 d-flex justify-content-between align-items-center">
+                      <select [id]="item.key"
+                              [name]="item.key"
+                              class="form-control mr-2"
+                              >
+                        <option *ngFor="let itme of item?.options?.optionList"
+                                [value]="itme">
+                          {{ itme }}
+                        </option>
+                      </select>
+                      <button type="button"
+                              class="btn btn-outline-danger rounded-circle deleteBtn"
+                              (click)="removeItem(i)">
+                              {{ "—" }}
+                      </button>
+                    </div>
+                  </ng-container>
+
+              </div>
+          </div>
+        </div>
+      </div>
+      <!-- 拖拉欄位組件區 -->
+      <div>
+        <h5>{{ 'drag and drop component' }}</h5>
+          <div  cdkDropList
+              [cdkDropListData]="dragFormList"
+              cdkDragHandleDisabled
+              class="border p-3 drapList overflow-scroll"
+              >
+          <div  class="border dragItem p-2 mb-2 d-flex justify-content-between"
+                *ngFor="let item of dragFormList" cdkDrag>
+                <span> {{ item.name }} </span>
+                <i class="fas fa-arrows-alt "></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 預覽頁 -->
+  <div *ngIf="isPrivewPage"
+        class="row d-flex flex-column align-items-center">
+    <app-preview-page class="col-md-6 col-lg-6 col-12 col-sm-12 border rounded p-3"
+                      [dropFormList]="displayDropFormList">
+    </app-preview-page>
+  </div>
+
+  <div [ngClass]="{ 'd-flex': true,
+                    'justify-content-between': !isPrivewPage,
+                    'justify-content-center': isPrivewPage }">
+    <ng-container *ngIf="!isPrivewPage">
+      <button class="btn btn-outline-dark"
+            (click)="resetForm()">
+        {{ 'Reset' }}
+      </button>
+
+      <button class="btn btn-primary"
+              [disabled]="dropFormList.length === 0"
+              (click)="previewForm()">
+        {{ 'Preview' }}
+      </button>
+    </ng-container>
+  </div>
+</div>
+
+<!-- 輸入項配置 modal -->
+<ng-template #configModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ 'config' }}</h4>
+    <button type="button"
+            class="btn-close close pull-right"
+            aria-label="Close"
+            >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- input格式： name -->
+    <ng-container *ngIf="selectedConfigData?.tag === 'input'">
+      <div class="mb-3">
+        <label for="name"
+              class="form-label">
+          {{ 'name' }}
+        </label>
+        <input  type="text"
+                id="name"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.name"
+                [value]="selectedConfigData?.name"
+                placeholder="請填寫 顯示名稱"
+                >
+      </div>
+      <!-- require -->
+      <div class="mb-3">
+        <input  type="checkbox"
+                id="require"
+                class="mr-2"
+                [(ngModel)]="selectedConfigData.require">
+        <label  for="require">
+          {{ 'require' }}
+        </label>
+      </div>
+    </ng-container>
+
+    <!-- radio、checkbox格式: name、optionList、inputValue -->
+    <ng-container *ngIf="selectedConfigData?.tag === 'radioOrCheckbox'">
+      <!-- name -->
+      <div class="mb-3">
+        <label  for="name"
+                class="form-label">
+          {{ 'name' }}
+        </label>
+        <input  type="text"
+                id="name"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.name"
+                [value]="selectedConfigData?.name"
+                required
+                placeholder="請填寫 key">
+        <mat-hint *ngIf="selectedConfigData.type === 'checkbox'">
+          {{ '例： 興趣、愛好等等，請填寫單一值。' }}
+        </mat-hint>
+        <mat-hint *ngIf="selectedConfigData.type === 'radio'">
+          {{ '例： 性別、是否參加等等，請填寫單一值。' }}
+        </mat-hint>
+      </div>
+      <!-- optionList、inputValue -->
+      <div class="mb-3">
+        <label class="form-label">
+          {{ 'option' }}
+        </label>
+        <input  type="text"
+                id="inputValue"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.options.inputValue"
+                [value]="selectedConfigData?.options?.inputValue"
+                required
+                placeholder="請填寫 顯示項目別">
+        <mat-hint *ngIf="selectedConfigData.type === 'checkbox'">
+          {{ '例： 籃球,棒球,電影,..etc，請使用半形逗號 "," 隔開多個項目別，結尾不需逗號。' }}
+        </mat-hint>
+        <mat-hint *ngIf="selectedConfigData.type === 'radio'">
+          {{ '例： 男,女,..etc，請使用半形逗號 "," 隔開多個項目別，結尾不需逗號。' }}
+        </mat-hint>
+      </div>
+
+      <!-- require -->
+      <div class="mb-3">
+        <input  type="checkbox"
+                id="require"
+                class="mr-2"
+                [(ngModel)]="selectedConfigData.require">
+        <label  for="require">
+          {{ 'require' }}
+        </label>
+      </div>
+    </ng-container>
+
+    <!-- textarea格式： name, rows -->
+    <ng-container *ngIf="selectedConfigData?.tag === 'textarea'">
+      <div class="mb-3">
+        <label for="name"
+              class="form-label">
+          {{ 'name' }}
+        </label>
+        <input  type="text"
+                id="name"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.name"
+                [value]="selectedConfigData?.name"
+                placeholder="請填寫 顯示名稱">
+      </div>
+      <div class="mb-3">
+        <label for="name"
+              class="form-label">
+          {{ 'column height' }}
+        </label>
+        <input  type="text"
+                id="rows"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.options.rows"
+                [value]="selectedConfigData?.options?.rows"
+                placeholder="請設定 文字區塊高度">
+      </div>
+      <div class="mb-3">
+        <label for="limit"
+              class="form-label">
+          {{ 'content limit' }}
+        </label>
+        <input  type="text"
+                id="limit"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.options.maxLength"
+                [value]="selectedConfigData?.options?.maxLength"
+                placeholder="請設定 文字最大數字限制">
+        <mat-hint>
+          {{ '請輸入最大數字限制，若不限制無需填寫。' }}
+        </mat-hint>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">
+          {{ 'content' }}
+        </label>
+        <textarea id="content"
+                  class="form-control"
+                  [(ngModel)]="selectedConfigData.value"
+                  [value]="selectedConfigData?.value"
+                  placeholder="請填寫 文字區塊內容">
+        </textarea>
+      </div>
+
+      <div class="mb-3">
+        <input  type="checkbox"
+                id="require"
+                class="mr-2"
+                [(ngModel)]="selectedConfigData.require">
+        <label  for="require">
+          {{ 'require' }}
+        </label>
+      </div>
+    </ng-container>
+
+    <!-- select格式：name、optionList -->
+    <ng-container *ngIf="selectedConfigData?.tag === 'select'">
+      <div class="mb-3">
+        <label for="name"
+              class="form-label">
+          {{ 'name' }}
+        </label>
+        <input  type="text"
+                id="name"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.name"
+                [value]="selectedConfigData?.name"
+                placeholder="請填寫 顯示名稱"
+                >
+        <mat-hint >
+          {{ '例： 有興趣的產品等等，請填寫單一值。' }}
+        </mat-hint>
+      </div>
+      <!-- optionList、inputValue -->
+      <div class="mb-3">
+        <label class="form-label">
+          {{ 'option' }}
+        </label>
+        <input  type="text"
+                id="inputValue"
+                class="form-control"
+                [(ngModel)]="selectedConfigData.options.inputValue"
+                [value]="selectedConfigData?.options?.inputValue"
+                required
+                placeholder="請填寫 顯示項目別">
+        <mat-hint >
+          {{ '例： AWS,IBM,..etc，請使用半形逗號 "," 隔開多個項目別，結尾不需逗號。' }}
+        </mat-hint>
+      </div>
+
+      <!-- require -->
+      <div class="mb-3">
+        <input  type="checkbox"
+                id="require"
+                class="mr-2"
+                [(ngModel)]="selectedConfigData.require">
+        <label  for="require">
+          {{ 'require' }}
+        </label>
+      </div>
+    </ng-container>
+
+  </div>
+
+  <!-- footer -->
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-default"
+            (click)="hideConfig()">
+      {{ 'close' }}
+    </button>
+  </div>
+</ng-template>
