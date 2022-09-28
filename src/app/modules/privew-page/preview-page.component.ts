@@ -38,7 +38,7 @@ export class PreviewPageComponent implements OnInit{
     setTimeout(() => {
       this.dynamicForm = this.fb.group({});
       for(let data of this.dropFormList){
-        this.dynamicForm.addControl(data.key, this.fb.control(this.defaultValue(data?.value), this.defaultValidator(data)));
+        this.dynamicForm.addControl(data.name!, this.fb.control(this.defaultValue(data?.value), this.defaultValidator(data)));
       }
     }, 0);
   }
@@ -60,14 +60,14 @@ export class PreviewPageComponent implements OnInit{
     if(data.type === 'radio'){
       data.value = value;
       this.dynamicForm.patchValue({
-        [data.key]: value
+        [data.name!]: value
       });
     }else{
       const values: string[] = data.value as string[];
       values.includes(value) ? values.splice(values.indexOf(value), 1) : values.push(value);
       data.value = values;
       this.dynamicForm.patchValue({
-        [data.key]: values
+        [data.name!]: values
       });
     }
 

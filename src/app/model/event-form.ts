@@ -8,8 +8,9 @@ export enum TagType{
 export interface TagFormat{
   tag: string,
   type: string,
-  key: string,
-  name: string,
+  key: number | null,
+  name: string | null,
+  title: string,
   value: string[] | string | number | null,
   require: boolean,
   options?: tagOption,
@@ -28,64 +29,72 @@ export class TagFormat{
       {
         tag: TagType.INPUT,
         type: 'text',
-        key: 'lastName',
-        name: '姓氏',
+        key: null,
+        name: 'name',
+        title: '姓氏',
         value: '',
         require: true
       },
       {
         tag: TagType.INPUT,
         type: 'text',
-        key: 'firstName',
-        name: '名字',
+        key: null,
+        name: 'firstName',
+        title: '名字',
         value: '',
         require: true
       },
       {
         tag: TagType.INPUT,
         type: 'text',
-        key: 'name',
-        name: '姓名',
+        key: null,
+        name: 'lastName',
+        title: '姓名',
         value: '',
         require: true
       },
       {
         tag: TagType.INPUT,
         type: 'email',
-        key: 'email',
-        name: '信箱',
+        key: null,
+        name: 'email',
+        title: '信箱',
         value: '',
         require: true
       },
       {
         tag: TagType.INPUT,
         type: 'tel',
-        key: 'phone',
-        name: '電話',
+        key: null,
+        name: 'phone',
+        title: '電話',
         value: null,
         require: true
       },
       {
         tag: TagType.INPUT,
         type: 'text',
-        key: 'id',
-        name: '會員編號 ID',
+        key: null,
+        name: 'id',
+        title: '會員編號 ID',
         value: '',
         require: true
       },
       {
         tag: TagType.INPUT,
         type: 'text',
-        key: '文字欄位',
-        name: '文字欄位',
+        key: null,
+        name: null,
+        title: '文字欄位',
         value: '',
         require: true
       },
       {
         tag: TagType.TEXTAREA,
         type: 'text',
-        key: '文字區塊',
-        name: '文字區塊',
+        key: null,
+        name: null,
+        title: '文字區塊',
         value: '文字區塊內容',
         require: true,
         options: {
@@ -96,8 +105,9 @@ export class TagFormat{
       {
         tag: TagType.RADIOORCHECKBOX,
         type: 'radio',
-        key: '單選區塊',
-        name: '單選區塊',
+        key: null,
+        name: null,
+        title: '單選區塊',
         value: '',
         require: true,
         options:{
@@ -108,8 +118,9 @@ export class TagFormat{
       {
         tag: TagType.RADIOORCHECKBOX,
         type: 'checkbox',
-        key: '多選區塊',
-        name: '多選區塊',
+        key: null,
+        name: null,
+        title: '多選區塊',
         value: [],
         require: true,
         options: {
@@ -120,8 +131,9 @@ export class TagFormat{
       {
         tag: TagType.SELECT,
         type: 'select',
-        key: '下拉式選單',
-        name: '下拉式選單',
+        key: null,
+        name: null,
+        title: '下拉式選單',
         value: '',
         require: true,
         options: {

@@ -15,7 +15,7 @@ export class DynamicFormComponent implements OnInit{
   public dropFormList: TagFormat[];
   public dragFormList: TagFormat[];
   public displayDropFormList: TagFormat[] = [];
-  public selectedConfigData: any;
+  public selectedConfigData: TagFormat | any;
   public modalRef?: BsModalRef;
   public isPrivewPage: boolean = false;
 
@@ -53,24 +53,22 @@ export class DynamicFormComponent implements OnInit{
   }
 
   // inpute格式配置
-  inputConfig(data: any, configModal: TemplateRef<any>): void{
+  inputConfig(data: TagFormat | any, configModal: TemplateRef<any>): void{
     this.selectedConfigData = data;
     this.modalRef = this.modalService.show(configModal);
   }
 
   // 關閉配置彈跳框並設定值
   hideConfig(): void{
+    this.selectedConfigData.title = this.selectedConfigData.title;
     switch(this.selectedConfigData.tag){
       case TagType.RADIOORCHECKBOX:
-        this.selectedConfigData.key = this.selectedConfigData.name;
         this.selectedConfigData.options.optionList = this.selectedConfigData?.options?.inputValue?.split(',')?.map( (v: string) => v?.trim()) || '';
         break;
       case TagType.SELECT:
-        this.selectedConfigData.key = this.selectedConfigData.name;
         this.selectedConfigData.options.optionList = this.selectedConfigData?.options?.inputValue?.split(',')?.map( (v: string) => v?.trim()) || [];
         break;
       default:
-        this.selectedConfigData.key = this.selectedConfigData.name;
         break;
     }
     this.modalRef?.hide();
@@ -84,8 +82,13 @@ export class DynamicFormComponent implements OnInit{
   // 預覽表單
   previewForm(): void{
     this.displayDropFormList = _.cloneDeep(this.dropFormList);
+    for(let index of this.displayDropFormList.keys()){
+      const item = this.displayDropFormList[index];
+      item.key = index + 1;
+      item.name = `${item.key}-${item.tag}`;
+    }
     this.isPrivewPage = true;
-    console.log('privewForm: ', [this.dropFormList]);
+    console.log('privewForm: ', [this.displayDropFormList]);
   }
 
   // 返回配置頁

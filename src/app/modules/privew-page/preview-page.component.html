@@ -20,14 +20,14 @@
               {{ '電話' }}
             </ng-container>
             <ng-container *ngIf="item.type === 'text'">
-              {{ item.name }}
+              {{ item.title }}
             </ng-container>
           </label>
         </div>
         <input  [type]="item.type"
                 [id]="item.key"
                 class="form-control"
-                [formControlName]="item.key"
+                [formControlName]="item.name"
                 [value]="item.value"
                 >
       </ng-container>
@@ -40,7 +40,7 @@
             {{ '*' }}
           </span>
           <label  [for]="item.key">
-            {{ item.name }}
+            {{ item.title }}
           </label>
         </div>
         <div class="mx-2">
@@ -48,7 +48,7 @@
             <input  class="mr-2"
                     [type]="item.type"
                     [id]="item.key"
-                    [name]="item.key"
+                    [name]="item.name"
                     (click)="onRadioOrCheckboxChange(item, value)"
                     [value]="value"
                   >
@@ -67,22 +67,22 @@
             {{ '*' }}
           </span>
           <label  [for]="item.key">
-            {{ item.name }}
+            {{ item.title }}
           </label>
         </div>
         <div>
           <textarea class="form-control"
                     [id]="item.key"
-                    [name]="item.key"
+                    [name]="item.name"
                     [rows]="item.options?.rows"
                     [maxLength]="item.options?.maxLength"
-                    [formControlName]="item.key"
+                    [formControlName]="item.name"
                     [value]="item.value"
                     >
           </textarea>
           <p  *ngIf="item?.options?.maxLength"
               class="text-right text-secondary">
-            {{ dynamicForm.get(item.key)?.value?.length + "/" + item.options?.maxLength }}
+            {{ dynamicForm.get(item.name!)?.value?.length + "/" + item.options?.maxLength }}
           </p>
         </div>
       </ng-container>
@@ -95,14 +95,14 @@
             {{ '*' }}
           </span>
           <label  [for]="item.key">
-            {{ item.name }}
+            {{ item.title }}
           </label>
         </div>
         <div class="mx-2">
           <select [id]="item.key"
-                  [name]="item.key"
+                  [name]="item.name"
                   class="form-control"
-                  [formControlName]="item.key"
+                  [formControlName]="item.name"
                   >
             <option *ngFor="let itme of item?.options?.optionList"
                     [value]="itme">
@@ -128,10 +128,12 @@
     <button type="button"
             class="btn-close close pull-right"
             aria-label="Close"
+            (click)="modalRef?.hide()"
             >
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
   </div>
+
   <div class="modal-body">
     <pre>{{ this.dynamicForm.value | json }}</pre>
   </div>

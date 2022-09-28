@@ -41,15 +41,15 @@
                           {{ '*' }}
                         </span>
                         <label>
-                          {{ item.name }}
+                          {{ item.title }}
                         </label>
                       </div>
-                      <i  *ngIf=" item.key !== 'firstName' &&
-                                  item.key !== 'lastName' &&
-                                  item.key !== 'name' &&
-                                  item.key !== 'email' &&
-                                  item.key !== 'phone' &&
-                                  item.key !== 'id'"
+                      <i  *ngIf=" item.title !== 'firstName' &&
+                                  item.title !== 'lastName' &&
+                                  item.title !== 'name' &&
+                                  item.title !== 'email' &&
+                                  item.title !== 'phone' &&
+                                  item.title !== 'id'"
                           class="fas fa-ellipsis-v mr-2 pointer"
                           (click)="inputConfig(item, configModal)">
                       </i>
@@ -57,7 +57,7 @@
                     <div class="mx-2 d-flex justify-content-between align-items-center">
                       <input  [type]="item.type"
                               [id]="item.key"
-                              [name]="item.key"
+                              [name]="item.name"
                               [value]="item.value"
                               class="form-control mr-2"
                               disabled
@@ -79,7 +79,7 @@
                           {{ '*' }}
                         </span>
                         <label>
-                          {{ item.name }}
+                          {{ item.title }}
                         </label>
                       </div>
                       <i  class="fas fa-ellipsis-v mr-2 pointer"
@@ -92,7 +92,7 @@
                           <input  class="mr-2"
                                   [type]="item.type"
                                   [id]="item.key"
-                                  [name]="item.key"
+                                  [name]="item.name"
                                 >
                           <label>
                             {{ data }}
@@ -116,7 +116,7 @@
                           {{ '*' }}
                         </span>
                         <label>
-                          {{ item.name }}
+                          {{ item.title }}
                         </label>
                       </div>
                       <i  class="fas fa-ellipsis-v mr-2 pointer"
@@ -127,7 +127,7 @@
                       <div style="width: 95%">
                         <textarea class="form-control mr-2"
                                   [id]="item.key"
-                                  [name]="item.key"
+                                  [name]="item.name"
                                   [rows]="item.options?.rows"
                                   [maxLength]="item.options?.maxLength"
                                   [value]="item.value"
@@ -156,7 +156,7 @@
                           {{ '*' }}
                         </span>
                         <label>
-                          {{ item.name }}
+                          {{ item.title }}
                         </label>
                       </div>
                       <i  class="fas fa-ellipsis-v mr-2 pointer"
@@ -165,7 +165,7 @@
                     </div>
                     <div class="mx-2 d-flex justify-content-between align-items-center">
                       <select [id]="item.key"
-                              [name]="item.key"
+                              [name]="item.name"
                               class="form-control mr-2"
                               >
                         <option *ngFor="let itme of item?.options?.optionList"
@@ -195,7 +195,7 @@
               >
           <div  class="border dragItem p-2 mb-2 d-flex justify-content-between"
                 *ngFor="let item of dragFormList" cdkDrag>
-                <span> {{ item.name }} </span>
+                <span> {{ item.title }} </span>
                 <i class="fas fa-arrows-alt "></i>
           </div>
         </div>
@@ -252,8 +252,8 @@
         <input  type="text"
                 id="name"
                 class="form-control"
-                [(ngModel)]="selectedConfigData.name"
-                [value]="selectedConfigData?.name"
+                [(ngModel)]="selectedConfigData.title"
+                [value]="selectedConfigData?.title"
                 placeholder="請填寫 顯示名稱"
                 >
       </div>
@@ -280,8 +280,8 @@
         <input  type="text"
                 id="name"
                 class="form-control"
-                [(ngModel)]="selectedConfigData.name"
-                [value]="selectedConfigData?.name"
+                [(ngModel)]="selectedConfigData.title"
+                [value]="selectedConfigData?.title"
                 required
                 placeholder="請填寫 key">
         <mat-hint *ngIf="selectedConfigData.type === 'checkbox'">
@@ -333,8 +333,8 @@
         <input  type="text"
                 id="name"
                 class="form-control"
-                [(ngModel)]="selectedConfigData.name"
-                [value]="selectedConfigData?.name"
+                [(ngModel)]="selectedConfigData.title"
+                [value]="selectedConfigData?.title"
                 placeholder="請填寫 顯示名稱">
       </div>
       <div class="mb-3">
@@ -397,8 +397,8 @@
         <input  type="text"
                 id="name"
                 class="form-control"
-                [(ngModel)]="selectedConfigData.name"
-                [value]="selectedConfigData?.name"
+                [(ngModel)]="selectedConfigData.title"
+                [value]="selectedConfigData?.title"
                 placeholder="請填寫 顯示名稱"
                 >
         <mat-hint >
